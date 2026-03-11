@@ -13,20 +13,24 @@
       color: white;
     }
     .links {
+      display: flex;
+      flex-wrap: wrap; /* allows links to wrap on small screens */
+      justify-content: center;
+      gap: 5px;
       margin-bottom: 1rem;
     }
     .links a {
       text-decoration: none;
-      color: #00ffff; /* bright color for visibility */
+      color: #00ffff;
       font-weight: bold;
-      margin: 0 5px;
+      white-space: nowrap; /* prevents breaking individual links */
     }
     .links span {
-      margin: 0 5px;
-      color: white; /* separator color */
+      color: white;
     }
     video {
-      max-width: 100%;
+      width: 100%; /* video scales with screen width */
+      max-width: 600px; /* optional max size */
       height: auto;
       border: 2px solid #fff;
       border-radius: 8px;
