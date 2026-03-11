@@ -5,33 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nathan Branagh</title>
   <style>
-    body {
+    html, body {
       margin: 0;
-      padding: 2rem;
+      padding: 0;
+      height: 100%;
       background-color: black;
       font-family: Arial, sans-serif;
-      text-align: center;
       color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
     }
     .links {
-      margin-bottom: 1.5rem;
+      margin: 2rem 0 1rem 0;
     }
     .links a {
-      display: inline-block;
-      margin: 0 10px;
       text-decoration: none;
       color: #00ffff;
       font-weight: bold;
-      font-size: 1.5rem; /* bigger text */
+      font-size: 2rem; /* bigger text */
+      margin: 0 15px;
     }
     .links span {
       color: white;
-      margin: 0 5px;
-      font-size: 1.5rem;
+      margin: 0 10px;
+      font-size: 2rem;
     }
     video {
-      max-height: 60vh; /* smaller to fully fit page */
       width: auto;
+      height: 70vh; /* scales to viewport height */
+      max-width: 90vw; /* ensures it fits width too */
       border: 2px solid #fff;
       border-radius: 8px;
     }
@@ -45,7 +49,7 @@
     <a href="https://www.tiktok.com/@retrojthompson?_r=1&_t=ZN-935tpweVK10" target="_blank">TikTok</a>
   </div>
 
-  <video controls autoplay muted loop>
+  <video autoplay muted loop playsinline>
     <source src="intro.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
