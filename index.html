@@ -50,26 +50,30 @@ body {
   align-items: center;
   justify-content: center;
   gap: 20px;
-  transition: transform 0.5s ease;
-  padding: 0 40px;
-  width: 100%;
+  padding: 0 20px;
+  transition: all 0.5s ease;
+  scroll-behavior: smooth;
 }
 
-/* Videos */
 .carousel video {
-  width: 180px; /* side videos */
+  flex: 0 0 auto;
+  width: 180px;  /* small previews for initial view */
   max-height: 60vh;
   border: 2px solid #fff;
   border-radius: 8px;
   object-fit: contain;
   background-color: black;
   transition: all 0.5s ease;
-  opacity: 0.5;
-  flex-shrink: 0;
+  cursor: pointer;
 }
 
-.carousel video.active {
-  width: 320px;       /* center video bigger */
+/* Focused state: enlarge center video */
+.carousel.focused video {
+  opacity: 0.5;
+}
+
+.carousel.focused video.active {
+  width: 320px;
   max-height: 70vh;
   opacity: 1;
   border: 3px solid #00ffff;
@@ -89,6 +93,14 @@ body {
   cursor: pointer;
   border-radius: 6px;
   z-index: 10;
+  display: none; /* initially hidden */
+}
+
+.carousel.focused + .arrow.left,
+.carousel.focused + .arrow.right,
+.carousel-container .arrow.left,
+.carousel-container .arrow.right {
+  display: block;
 }
 
 .arrow.left { left: 10px; }
@@ -99,15 +111,15 @@ body {
 }
 
 /* Mobile responsiveness */
-@media(max-width: 900px){
+@media(max-width:900px){
   .carousel video {
-    width: 120px;
+    width: 100px;
     max-height: 45vh;
   }
 
-  .carousel video.active {
-    width: 200px;
-    max-height: 55vh;
+  .carousel.focused video.active {
+    width: auto;
+    max-height: 90vh;
   }
 }
 </style>
@@ -123,10 +135,8 @@ body {
 
 <!-- Carousel -->
 <div class="carousel-container">
-  <button class="arrow left" onclick="prevVideo()">❮</button>
-
   <div class="carousel">
-    <video class="active" playsinline controls preload="auto">
+    <video playsinline controls preload="auto">
       <source src="intro.mp4" type="video/mp4">
     </video>
     <video playsinline controls preload="auto">
@@ -140,12 +150,26 @@ body {
     </video>
   </div>
 
+  <button class="arrow left" onclick="prevVideo()">❮</button>
   <button class="arrow right" onclick="nextVideo()">❯</button>
 </div>
 
 <script>
 let current = 0;
-const videos = document.querySelectorAll(".carousel video");
+const carousel = document.querySelector(".carousel");
+const videos = carousel.querySelectorAll("video");
+const leftArrow = document.querySelector(".arrow.left");
+const rightArrow = document.querySelector(".arrow.right");
+
+// Initial: all videos visible, clickable
+videos.forEach((vid, i) => {
+  vid.addEventListener("click", () => {
+    // Activate focused carousel
+    carousel.classList.add("focused");
+    current = i;
+    updateCarousel();
+  });
+});
 
 function updateCarousel() {
   videos.forEach((vid, i) => {
@@ -153,8 +177,7 @@ function updateCarousel() {
     if(i === current) vid.classList.add("active");
   });
 
-  // Center the active video in the carousel
-  const carousel = document.querySelector(".carousel");
+  // Center active video
   const activeVideo = videos[current];
   const carouselRect = carousel.getBoundingClientRect();
   const videoRect = activeVideo.getBoundingClientRect();
@@ -162,20 +185,20 @@ function updateCarousel() {
   carousel.scrollBy({ left: offset, behavior: 'smooth' });
 }
 
-function nextVideo(){
+function nextVideo() {
   current = (current + 1) % videos.length;
   updateCarousel();
 }
 
-function prevVideo(){
+function prevVideo() {
   current = (current - 1 + videos.length) % videos.length;
   updateCarousel();
 }
 
-/* Optional: auto-advance */
-videos.forEach((vid, i) => {
-  vid.addEventListener("ended", () => {
-    if(i === current) nextVideo();
+// Auto-advance for focused mode
+videos.forEach((vid,i)=>{
+  vid.addEventListener("ended", ()=>{
+    if(i === current && carousel.classList.contains("focused")) nextVideo();
   });
 });
 </script>
