@@ -27,24 +27,29 @@ body {
   z-index: -1;
 }
 
-/* Top links */
-.links {
-  margin: 2rem 0 1rem 0;
+/* Top header with name and links */
+.header {
+  width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  padding: 1rem 2rem;
   z-index: 5;
   position: relative;
 }
 
-.links a {
-  text-decoration: none;
-  color: white;
+.header .name {
+  font-size: 1.5rem;
   font-weight: bold;
-  font-size: 1rem;
+  color: white;
 }
 
+.links {
+  display: flex;
+  gap: 10px;
+}
+
+.links a { text-decoration: none; color: white; font-weight: bold; font-size: 1rem; }
 .links span { color: white; font-size: 1rem; }
 
 /* Carousel container */
@@ -53,7 +58,7 @@ body {
   display: flex;
   justify-content: center;
   overflow: hidden;
-  padding-bottom: 20px;
+  padding: 20px 0;
   position: relative;
 }
 
@@ -92,7 +97,7 @@ body {
   cursor: pointer;
   border-radius: 6px;
   z-index: 10;
-  display: none; /* desktop default */
+  display: none;
 }
 
 .arrow.left { left: 10px; }
@@ -109,38 +114,65 @@ body {
   .carousel-container { overflow-x: auto; padding: 10px 0; }
   .carousel { gap: 15px; }
   .carousel video { max-height: 80vh; flex: 0 0 auto; }
-  .arrow { display: block !important; }
+  .arrow { display: block !important; } /* always visible on mobile */
+  .header { flex-direction: column; gap: 10px; align-items: center; }
 }
+  
+/* Images below carousel */
+.carousel-images {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.carousel-images img { max-height: 150px; border-radius: 8px; }
 </style>
 </head>
 <body>
 
 <div class="background-blur"></div>
 
-<div class="links">
-  <a href="https://www.linkedin.com/in/nathanbranagh/" target="_blank">LinkedIn</a><span>|</span>
-  <a href="https://drive.google.com/drive/folders/1x9_RzVzoP2SZ3xy2s5E-kBiOas8eTh6h" target="_blank">Portfolio</a><span>|</span>
-  <a href="https://www.tiktok.com/@retrojthompson?_r=1&_t=ZN-935tpweVK10" target="_blank">TikTok</a>
+<div class="header">
+  <div class="name">Nathan Branagh</div>
+  <div class="links">
+    <a href="https://www.linkedin.com/in/nathanbranagh/" target="_blank">LinkedIn</a><span>|</span>
+    <a href="https://drive.google.com/drive/folders/1x9_RzVzoP2SZ3xy2s5E-kBiOas8eTh6h" target="_blank">Portfolio</a><span>|</span>
+    <a href="https://www.tiktok.com/@retrojthompson?_r=1&_t=ZN-935tpweVK10" target="_blank">TikTok</a>
+  </div>
 </div>
 
 <div class="carousel-container">
   <div class="carousel">
-    <video playsinline controls preload="auto"><source src="intro.mp4" type="video/mp4"></video>
-    <video playsinline controls preload="auto"><source src="Cabinet.mp4" type="video/mp4"></video>
-    <video playsinline controls preload="auto"><source src="Admiral.mp4" type="video/mp4"></video>
-    <video playsinline controls preload="auto"><source src="EAG2.mp4" type="video/mp4"></video>
-    <video playsinline controls preload="auto"><source src="SR2.mp4" type="video/mp4"></video>
+    <video playsinline controls preload="auto" poster="intro.jpg">
+      <source src="intro.mp4" type="video/mp4">
+    </video>
+    <video playsinline controls preload="auto" poster="Cabinet.jpg">
+      <source src="Cabinet.mp4" type="video/mp4">
+    </video>
+    <video playsinline controls preload="auto" poster="Admiral.jpg">
+      <source src="Admiral.mp4" type="video/mp4">
+    </video>
+    <video playsinline controls preload="auto" poster="EAG2.jpg">
+      <source src="EAG2.mp4" type="video/mp4">
+    </video>
+    <video playsinline controls preload="auto" poster="SR2.jpg">
+      <source src="SR2.mp4" type="video/mp4">
+    </video>
   </div>
   <button class="arrow left" onclick="prevVideo()">❮</button>
   <button class="arrow right" onclick="nextVideo()">❯</button>
+</div>
+
+<div class="carousel-images">
+  <img src="NAH1.png" alt="NAH1">
+  <img src="UKC1.png" alt="UKC1">
 </div>
 
 <script>
 let current = 0;
 const carousel = document.querySelector(".carousel");
 const videos = carousel.querySelectorAll("video");
-const leftArrow = document.querySelector(".arrow.left");
-const rightArrow = document.querySelector(".arrow.right");
 
 // Only one video plays at a time
 function pauseAllExcept(active) { videos.forEach(v => { if(v !== active) v.pause(); }); }
@@ -158,14 +190,16 @@ videos.forEach((vid,i)=>{
   vid.addEventListener("play", ()=> pauseAllExcept(vid));
 });
 
-// Exit focused mode: click outside or ESC
+// Exit focused mode
 function exitFocusedMode(){
   carousel.classList.remove("focused");
   videos.forEach(v => v.classList.remove("active"));
 }
+
 carousel.addEventListener("click", e=>{
   if(carousel.classList.contains("focused") && !e.target.classList.contains("active")) exitFocusedMode();
 });
+
 document.addEventListener("keydown", e=>{
   if(e.key==="Escape" && carousel.classList.contains("focused")) exitFocusedMode();
 });
