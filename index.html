@@ -108,7 +108,7 @@ body {
   cursor: pointer;
   border-radius: 6px;
   z-index: 10;
-  display: none; /* default hidden on desktop */
+  display: none; /* hidden on desktop by default */
 }
 
 .arrow.left { left: 10px; }
@@ -118,7 +118,7 @@ body {
   background: rgba(0,0,0,0.7);
 }
 
-/* Show arrows on hover for desktop */
+/* Desktop: show arrows on hover */
 @media(min-width:901px){
   .carousel-container:hover .arrow {
     display: block;
@@ -141,15 +141,10 @@ body {
     width: auto;
     max-height: 80vh;
     flex: 0 0 auto;
-    border: none;
-    preload: auto;
-    playsinline: true;
-    controls: true; /* ensures tap-to-play on mobile */
   }
   .carousel.focused video.active {
     max-height: 90vh;
     width: auto;
-    border: none;
   }
   .arrow {
     display: block !important; /* always visible on mobile */
@@ -162,4 +157,107 @@ body {
 <div class="background-blur"></div>
 
 <div class="links">
-  <a href="https://www.linkedin.com/in/nathanbranagh/" target="_blank">
+  <a href="https://www.linkedin.com/in/nathanbranagh/" target="_blank">LinkedIn</a><span>|</span>
+  <a href="https://drive.google.com/drive/folders/1x9_RzVzoP2SZ3xy2s5E-kBiOas8eTh6h" target="_blank">Portfolio</a><span>|</span>
+  <a href="https://www.tiktok.com/@retrojthompson?_r=1&_t=ZN-935tpweVK10" target="_blank">TikTok</a>
+</div>
+
+<div class="carousel-container">
+  <div class="carousel">
+    <video playsinline controls preload="auto">
+      <source src="intro.mp4" type="video/mp4">
+    </video>
+    <video playsinline controls preload="auto">
+      <source src="Cabinet.mp4" type="video/mp4">
+    </video>
+    <video playsinline controls preload="auto">
+      <source src="Admiral.mp4" type="video/mp4">
+    </video>
+    <video playsinline controls preload="auto">
+      <source src="EAG2.mp4" type="video/mp4">
+    </video>
+  </div>
+  <button class="arrow left" onclick="prevVideo()">❮</button>
+  <button class="arrow right" onclick="nextVideo()">❯</button>
+</div>
+
+<script>
+let current = 0;
+const carousel = document.querySelector(".carousel");
+const videos = carousel.querySelectorAll("video");
+const leftArrow = document.querySelector(".arrow.left");
+const rightArrow = document.querySelector(".arrow.right");
+
+// Only one video plays at a time
+function pauseAllExcept(active) {
+  videos.forEach(v => {
+    if(v !== active) v.pause();
+  });
+}
+
+// Click to focus/zoom
+videos.forEach((vid,i)=>{
+  vid.addEventListener("click", ()=>{
+    pauseAllExcept(vid);
+    if(!carousel.classList.contains("focused")){
+      carousel.classList.add("focused");
+      current = i;
+      updateCarousel();
+    }
+  });
+
+  vid.addEventListener("play", ()=> pauseAllExcept(vid));
+});
+
+// Exit focused mode: click outside or ESC
+function exitFocusedMode(){
+  carousel.classList.remove("focused");
+  videos.forEach(v => v.classList.remove("active"));
+}
+
+carousel.addEventListener("click", e=>{
+  if(carousel.classList.contains("focused") && !e.target.classList.contains("active")){
+    exitFocusedMode();
+  }
+});
+
+document.addEventListener("keydown", e=>{
+  if(e.key === "Escape" && carousel.classList.contains("focused")){
+    exitFocusedMode();
+  }
+});
+
+function updateCarousel(){
+  videos.forEach((v,i)=>{
+    v.classList.remove("active");
+    if(i===current) v.classList.add("active");
+  });
+  if(window.innerWidth > 900){
+    const activeVideo = videos[current];
+    const carouselRect = carousel.getBoundingClientRect();
+    const videoRect = activeVideo.getBoundingClientRect();
+    const offset = videoRect.left - carouselRect.left - (carouselRect.width/2) + (videoRect.width/2);
+    carousel.scrollBy({ left: offset, behavior: 'smooth' });
+  }
+}
+
+function nextVideo(){
+  videos[current].pause();
+  current = (current + 1) % videos.length;
+  updateCarousel();
+}
+
+function prevVideo(){
+  videos[current].pause();
+  current = (current -1 + videos.length) % videos.length;
+  updateCarousel();
+}
+
+// Mobile: center first video
+if(window.innerWidth <= 900){
+  const firstVideo = videos[0];
+  firstVideo.scrollIntoView({behavior:'auto', inline:'center'});
+}
+</script>
+</body>
+</html>
