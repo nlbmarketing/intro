@@ -79,9 +79,8 @@ body {
   border: none;
   border-radius: 8px;
   object-fit: contain;
-  background-color: transparent;
-  transition: all 0.5s ease;
   cursor: pointer;
+  transition: all 0.5s ease;
 }
 
 /* Focused state */
@@ -135,14 +134,10 @@ body {
     width: auto;
     max-height: 80vh;
     flex: 0 0 auto;
-    border: none;
-    preload: auto;
-    playsinline: true;
   }
   .carousel.focused video.active {
     max-height: 90vh;
     width: auto;
-    border: none;
   }
   .arrow {
     display: none !important;
@@ -175,6 +170,7 @@ body {
       <source src="EAG2.mp4" type="video/mp4">
     </video>
   </div>
+
   <button class="arrow left" onclick="prevVideo()">❮</button>
   <button class="arrow right" onclick="nextVideo()">❯</button>
 </div>
@@ -193,7 +189,7 @@ function pauseAllExcept(active) {
   });
 }
 
-// Click to focus (PC: enlarge only, no black overlay)
+// Click to focus/zoom
 videos.forEach((vid,i)=>{
   vid.addEventListener("click", ()=>{
     pauseAllExcept(vid);
