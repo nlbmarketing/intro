@@ -30,7 +30,7 @@ body {
   font-size: 2rem;
   font-weight: bold;
   margin-top: 1rem;
-  margin-bottom: 2rem; /* more space to hyperlinks */
+  margin-bottom: 2rem;
   text-align: center;
 }
 
@@ -69,12 +69,13 @@ body {
   height: 65vh;
   border: none;
   border-radius: 8px;
-  object-fit: contain; /* ensure first frame fills container */
+  object-fit: contain;
   cursor: pointer;
   transition: all 0.5s ease;
   background: black;
-  preload: auto; /* ensure first frame shows */
+  preload: auto;
   playsinline: true;
+  muted: true; /* necessary for initial frame render on mobile */
 }
 
 /* Focused state */
@@ -129,19 +130,19 @@ body {
 
 <div class="carousel-container">
   <div class="carousel">
-    <video playsinline controls preload="auto" poster="intro.jpg">
+    <video playsinline controls preload="auto" poster="intro.jpg" muted>
       <source src="intro.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="auto" poster="Cabinet.jpg">
+    <video playsinline controls preload="auto" poster="Cabinet.jpg" muted>
       <source src="Cabinet.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="auto" poster="Admiral.jpg">
+    <video playsinline controls preload="auto" poster="Admiral.jpg" muted>
       <source src="Admiral.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="auto" poster="EAG2.jpg">
+    <video playsinline controls preload="auto" poster="EAG2.jpg" muted>
       <source src="EAG2.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="auto" poster="SR2.jpg">
+    <video playsinline controls preload="auto" poster="SR2.jpg" muted>
       <source src="SR2.mp4" type="video/mp4">
     </video>
   </div>
@@ -158,10 +159,11 @@ const videos = carousel.querySelectorAll("video");
 // Only one video plays at a time
 function pauseAllExcept(active) { videos.forEach(v => { if(v !== active) v.pause(); }); }
 
-// Click to focus/zoom
+// Click to focus/zoom and unmute
 videos.forEach((vid,i)=>{
   vid.addEventListener("click", ()=>{
     pauseAllExcept(vid);
+    vid.muted = false; // enable audio when clicked
     if(!carousel.classList.contains("focused")){
       carousel.classList.add("focused");
       current = i;
