@@ -30,11 +30,10 @@ body {
   font-size: 2rem;
   font-weight: bold;
   margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
   text-align: center;
 }
 
-/* Hyperlinks centered */
+/* Hyperlinks centered below name */
 .links {
   display: flex;
   gap: 10px;
@@ -68,9 +67,10 @@ body {
   height: 65vh;
   border: none;
   border-radius: 8px;
-  object-fit: contain;
+  object-fit: cover;
   cursor: pointer;
   transition: all 0.5s ease;
+  background: black; /* fallback for poster */
 }
 
 /* Focused state */
@@ -135,19 +135,19 @@ body {
 
 <div class="carousel-container">
   <div class="carousel">
-    <video playsinline controls preload="auto" poster="intro.jpg">
+    <video playsinline controls preload="metadata" poster="intro.jpg">
       <source src="intro.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="auto" poster="Cabinet.jpg">
+    <video playsinline controls preload="metadata" poster="Cabinet.jpg">
       <source src="Cabinet.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="auto" poster="Admiral.jpg">
+    <video playsinline controls preload="metadata" poster="Admiral.jpg">
       <source src="Admiral.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="auto" poster="EAG2.jpg">
+    <video playsinline controls preload="metadata" poster="EAG2.jpg">
       <source src="EAG2.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="auto" poster="SR2.jpg">
+    <video playsinline controls preload="metadata" poster="SR2.jpg">
       <source src="SR2.mp4" type="video/mp4">
     </video>
   </div>
