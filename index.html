@@ -33,7 +33,7 @@ body {
   text-align: center;
 }
 
-/* Hyperlinks centered below name */
+/* Hyperlinks centered */
 .links {
   display: flex;
   gap: 10px;
@@ -50,7 +50,7 @@ body {
   display: flex;
   justify-content: center;
   overflow: hidden;
-  padding: 10px 0;
+  padding: 20px 0;
   position: relative;
 }
 
@@ -60,6 +60,7 @@ body {
   align-items: center;
   gap: 30px;
   scroll-behavior: smooth;
+  justify-content: center; /* center the videos fully */
 }
 
 .carousel video {
@@ -67,7 +68,7 @@ body {
   height: 65vh;
   border: none;
   border-radius: 8px;
-  object-fit: cover;
+  object-fit: contain;
   cursor: pointer;
   transition: all 0.5s ease;
   background: black; /* fallback for poster */
@@ -105,20 +106,10 @@ body {
 /* Mobile responsiveness */
 @media(max-width:900px){
   .carousel-container { overflow-x: auto; padding: 10px 0; }
-  .carousel { gap: 15px; }
+  .carousel { gap: 15px; justify-content: flex-start; }
   .carousel video { max-height: 80vh; flex: 0 0 auto; }
   .arrow { display: block !important; } /* always visible on mobile */
 }
-
-/* Images below carousel, tiny thumbnails */
-.carousel-images {
-  display: flex;
-  gap: 5px;
-  justify-content: center;
-  margin-bottom: 2rem;
-}
-
-.carousel-images img { max-height: 20px; border-radius: 3px; }
 </style>
 </head>
 <body>
@@ -154,11 +145,6 @@ body {
 
   <button class="arrow left" onclick="prevVideo()">❮</button>
   <button class="arrow right" onclick="nextVideo()">❯</button>
-</div>
-
-<div class="carousel-images">
-  <img src="NAH1.png" alt="NAH1">
-  <img src="UKC1.png" alt="UKC1">
 </div>
 
 <script>
