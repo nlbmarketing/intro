@@ -5,12 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nathan Branagh</title>
 <style>
-html, body {
+body {
   margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
   font-family: Arial, sans-serif;
   color: white;
   display: flex;
@@ -24,17 +20,16 @@ html, body {
   top: 0; left: 0;
   width: 100%; height: 100%;
   background: url('NAH.png') center/cover no-repeat;
-  background-attachment: fixed;
   filter: blur(25px);
   z-index: -1;
 }
 
-/* Name above hyperlinks */
+/* Name above hyperlinks, slightly higher */
 .name {
   font-size: 2rem;
   font-weight: bold;
-  margin-top: 1.5rem;
-  margin-bottom: 3rem; /* increased space to hyperlinks */
+  margin-top: 0.5rem; /* moved slightly higher */
+  margin-bottom: 2rem;
   text-align: center;
 }
 
@@ -75,8 +70,8 @@ html, body {
   object-fit: contain;
   cursor: pointer;
   transition: all 0.5s ease;
-  background: transparent; /* ensures poster is visible */
-  preload: auto;           /* preload frames */
+  background: black;
+  preload: auto;
   playsinline: true;
 }
 
