@@ -15,7 +15,6 @@ body {
   align-items: center;
 }
 
-/* Blurred background */
 .background-blur {
   position: fixed;
   top: 0; left: 0;
@@ -25,7 +24,6 @@ body {
   z-index: -1;
 }
 
-/* Name above hyperlinks */
 .name {
   font-size: 2rem;
   font-weight: bold;
@@ -34,7 +32,6 @@ body {
   text-align: center;
 }
 
-/* Hyperlinks centered below name */
 .links {
   display: flex;
   gap: 10px;
@@ -45,7 +42,6 @@ body {
 .links a { text-decoration: none; color: white; font-weight: bold; font-size: 1rem; }
 .links span { color: white; font-size: 1rem; }
 
-/* Carousel container */
 .carousel-container {
   width: 100%;
   display: flex;
@@ -55,7 +51,6 @@ body {
   position: relative;
 }
 
-/* Carousel row */
 .carousel {
   display: flex;
   align-items: center;
@@ -75,14 +70,16 @@ body {
   background: black;
   preload: auto;
   playsinline: true;
-  muted: true; /* necessary for initial frame render on mobile */
+  muted: true;
+  autoplay: true; /* ensures first frame renders */
 }
 
-/* Focused state */
+/* Pause frame display initially */
+.carousel video.paused-frame { opacity: 1; }
+
 .carousel.focused video { opacity: 0.6; }
 .carousel.focused video.active { max-height: 85vh; opacity: 1; z-index: 2; }
 
-/* Arrows */
 .arrow {
   position: absolute;
   top: 50%;
@@ -102,12 +99,10 @@ body {
 .arrow.right { right: 10px; }
 .arrow:hover { background: rgba(0,0,0,0.7); }
 
-/* Desktop hover arrows */
 @media(min-width:901px){
   .carousel-container:hover .arrow { display: block; }
 }
 
-/* Mobile responsiveness */
 @media(max-width:900px){
   .carousel-container { overflow-x: auto; padding: 10px 0; }
   .carousel { gap: 15px; justify-content: flex-start; }
@@ -130,19 +125,19 @@ body {
 
 <div class="carousel-container">
   <div class="carousel">
-    <video playsinline controls preload="auto" poster="intro.jpg" muted>
+    <video playsinline controls preload="auto" poster="intro.jpg" muted autoplay>
       <source src="intro.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="auto" poster="Cabinet.jpg" muted>
+    <video playsinline controls preload="auto" poster="Cabinet.jpg" muted autoplay>
       <source src="Cabinet.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="auto" poster="Admiral.jpg" muted>
+    <video playsinline controls preload="auto" poster="Admiral.jpg" muted autoplay>
       <source src="Admiral.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="auto" poster="EAG2.jpg" muted>
+    <video playsinline controls preload="auto" poster="EAG2.jpg" muted autoplay>
       <source src="EAG2.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="auto" poster="SR2.jpg" muted>
+    <video playsinline controls preload="auto" poster="SR2.jpg" muted autoplay>
       <source src="SR2.mp4" type="video/mp4">
     </video>
   </div>
@@ -156,14 +151,19 @@ let current = 0;
 const carousel = document.querySelector(".carousel");
 const videos = carousel.querySelectorAll("video");
 
+// Pause all videos after loading, but keep first frame visible
+videos.forEach(v => {
+  v.addEventListener("loadeddata", ()=>{ v.pause(); v.classList.add("paused-frame"); });
+});
+
 // Only one video plays at a time
 function pauseAllExcept(active) { videos.forEach(v => { if(v !== active) v.pause(); }); }
 
-// Click to focus/zoom and unmute
+// Click to focus/zoom and enable audio
 videos.forEach((vid,i)=>{
   vid.addEventListener("click", ()=>{
     pauseAllExcept(vid);
-    vid.muted = false; // enable audio when clicked
+    vid.muted = false; // enable audio
     if(!carousel.classList.contains("focused")){
       carousel.classList.add("focused");
       current = i;
