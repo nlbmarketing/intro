@@ -25,12 +25,12 @@ body {
   z-index: -1;
 }
 
-/* Name slightly above hyperlinks */
+/* Name above hyperlinks */
 .name {
   font-size: 2rem;
   font-weight: bold;
-  margin-top: 1rem; /* moved slightly up */
-  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem; /* increased spacing */
   text-align: center;
 }
 
@@ -39,7 +39,7 @@ body {
   display: flex;
   gap: 10px;
   justify-content: center;
-  margin-bottom: 1.5rem; /* slight spacing below */
+  margin-bottom: 2rem; /* extra spacing to separate from videos */
 }
 
 .links a { text-decoration: none; color: white; font-weight: bold; font-size: 1rem; }
@@ -69,7 +69,7 @@ body {
   height: 65vh;
   border: none;
   border-radius: 8px;
-  object-fit: cover; /* ensure the poster fills the container */
+  object-fit: contain; /* ensure poster fills video properly */
   cursor: pointer;
   transition: all 0.5s ease;
   background: black; /* fallback if poster fails */
