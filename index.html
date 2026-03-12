@@ -74,11 +74,11 @@ body {
 
 .carousel video {
   flex: 0 0 auto;
-  width: auto;           /* full width */
-  height: 65vh;          /* adjust to vertical space */
-  border: none;          /* no border */
+  width: auto;
+  height: 65vh;
+  border: none;
   border-radius: 8px;
-  object-fit: contain;   /* maintain aspect ratio */
+  object-fit: contain;
   background-color: transparent;
   transition: all 0.5s ease;
   cursor: pointer;
@@ -135,11 +135,18 @@ body {
     width: auto;
     max-height: 80vh;
     flex: 0 0 auto;
+    border: none;
+    /* Mobile optimized load: autoplay muted */
+    autoplay: true;
+    muted: true;
+    preload: auto;
   }
   .carousel.focused video.active {
     max-height: 90vh;
     width: auto;
+    border: none;
   }
+  /* Arrows hidden on mobile */
   .arrow {
     display: none !important;
   }
@@ -160,16 +167,16 @@ body {
 <!-- Carousel -->
 <div class="carousel-container">
   <div class="carousel">
-    <video playsinline controls preload="auto">
+    <video playsinline muted autoplay preload="auto">
       <source src="intro.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="auto">
+    <video playsinline muted autoplay preload="auto">
       <source src="Cabinet.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="auto">
+    <video playsinline muted autoplay preload="auto">
       <source src="Admiral.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="auto">
+    <video playsinline muted autoplay preload="auto">
       <source src="EAG2.mp4" type="video/mp4">
     </video>
   </div>
@@ -187,7 +194,7 @@ const bgBlur = document.querySelector(".background-blur");
 const leftArrow = document.querySelector(".arrow.left");
 const rightArrow = document.querySelector(".arrow.right");
 
-// Only one video plays at a time
+// Ensure only one video plays at a time
 function pauseAllExcept(active) {
   videos.forEach(v => {
     if(v !== active) v.pause();
