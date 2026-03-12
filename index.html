@@ -43,7 +43,7 @@ body {
 
 .links a {
   text-decoration: none;
-  color: white; /* reverted to white */
+  color: white;
   font-weight: bold;
   font-size: 1rem;
 }
@@ -74,11 +74,11 @@ body {
 
 .carousel video {
   flex: 0 0 auto;
-  width: 280px;
-  max-height: 65vh;
-  border: 1px solid rgba(0,0,0,0.3); /* faint dark border */
+  width: auto;           /* full width */
+  height: 65vh;          /* adjust to vertical space */
+  border: none;          /* no border */
   border-radius: 8px;
-  object-fit: contain;
+  object-fit: contain;   /* maintain aspect ratio */
   background-color: transparent;
   transition: all 0.5s ease;
   cursor: pointer;
@@ -87,11 +87,10 @@ body {
 /* Focused state */
 .carousel.focused video {
   opacity: 0.6;
-  border: none;       /* remove border in focused mode */
 }
 
 .carousel.focused video.active {
-  width: 480px;
+  width: auto;
   max-height: 85vh;
   opacity: 1;
   z-index: 2;
@@ -136,14 +135,11 @@ body {
     width: auto;
     max-height: 80vh;
     flex: 0 0 auto;
-    border: 1px solid rgba(0,0,0,0.3); /* faint dark border */
   }
   .carousel.focused video.active {
     max-height: 90vh;
     width: auto;
-    border: none;
   }
-  /* Arrows hidden on mobile */
   .arrow {
     display: none !important;
   }
@@ -201,17 +197,15 @@ function pauseAllExcept(active) {
 // Click video to focus
 videos.forEach((vid,i)=>{
   vid.addEventListener("click", ()=>{
-    pauseAllExcept(vid); 
+    pauseAllExcept(vid);
     if(!carousel.classList.contains("focused")){
       carousel.classList.add("focused");
       current = i;
       updateCarousel();
-      // Show arrows desktop only
       if(window.innerWidth > 900){
         leftArrow.style.display = "block";
         rightArrow.style.display = "block";
       }
-      // Background black
       bgBlur.style.opacity = 0;
       document.body.style.background = "black";
     }
@@ -220,20 +214,7 @@ videos.forEach((vid,i)=>{
   vid.addEventListener("play", ()=> pauseAllExcept(vid));
 });
 
-// Exit focused mode on click outside active video
-carousel.addEventListener("click", (e)=>{
-  if(carousel.classList.contains("focused") && !e.target.classList.contains("active")){
-    exitFocusedMode();
-  }
-});
-
-// Exit focused mode on ESC
-document.addEventListener("keydown", (e)=>{
-  if(e.key === "Escape" && carousel.classList.contains("focused")){
-    exitFocusedMode();
-  }
-});
-
+// Exit focused mode
 function exitFocusedMode(){
   carousel.classList.remove("focused");
   videos.forEach(v => v.classList.remove("active"));
@@ -243,7 +224,19 @@ function exitFocusedMode(){
   document.body.style.background = "black";
 }
 
-// Update carousel active video
+// Click outside or ESC
+carousel.addEventListener("click", e=>{
+  if(carousel.classList.contains("focused") && !e.target.classList.contains("active")){
+    exitFocusedMode();
+  }
+});
+
+document.addEventListener("keydown", e=>{
+  if(e.key === "Escape" && carousel.classList.contains("focused")){
+    exitFocusedMode();
+  }
+});
+
 function updateCarousel(){
   videos.forEach((v,i)=>{
     v.classList.remove("active");
@@ -259,7 +252,7 @@ function updateCarousel(){
 }
 
 function nextVideo(){
-  videos[current].pause(); 
+  videos[current].pause();
   current = (current + 1) % videos.length;
   updateCarousel();
 }
@@ -270,7 +263,7 @@ function prevVideo(){
   updateCarousel();
 }
 
-// Mobile: scroll first video into view
+// Mobile: center first video
 if(window.innerWidth <= 900){
   const firstVideo = videos[0];
   firstVideo.scrollIntoView({behavior:'auto', inline:'center'});
