@@ -1,23 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nathan Branagh</title>
+
+<style>
+
+html, body {
+margin:0;
+padding:0;
+height:100%;
+background-color:black;
+font-family:Arial,sans-serif;
+color:white;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:flex-start;
+}
+
+.links {
+margin:1rem 0 0.5rem 0;
+display:flex;
+justify-content:center;
+align-items:center;
+gap:5px;
+}
+
+.links a {
+text-decoration:none;
+color:#00ffff;
+font-weight:bold;
+font-size:0.85rem;
+}
+
+.links span {
+color:white;
+font-size:0.85rem;
+}
+
+/* Carousel */
+
+.carousel {
+position:relative;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+/* Videos */
+
+.carousel video {
+width:auto;
+height:90vh;
+max-width:95vw;
+border:2px solid #fff;
+border-radius:8px;
+display:none;
+}
+
+.carousel video.active {
+display:block;
+}
+
+/* Arrows */
+
+.arrow {
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+background:rgba(0,0,0,0.6);
+border:none;
+color:white;
+font-size:32px;
+padding:10px 14px;
+cursor:pointer;
+border-radius:6px;
+}
+
+.arrow:hover {
+background:rgba(0,0,0,0.9);
+}
+
+.left {
+left:-60px;
+}
+
+.right {
+right:-60px;
+}
+
+@media(max-width:900px){
+
+.left {left:10px;}
+.right {right:10px;}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="links">
+<a href="https://www.linkedin.com/in/nathanbranagh/" target="_blank">LinkedIn</a><span>|</span>
+<a href="https://drive.google.com/drive/folders/1x9_RzVzoP2SZ3xy2s5E-kBiOas8eTh6h" target="_blank">Portfolio</a><span>|</span>
+<a href="https://www.tiktok.com/@retrojthompson?_r=1&_t=ZN-935tpweVK10" target="_blank">TikTok</a>
+</div>
+
 <div class="carousel">
 
-  <button class="arrow left" onclick="prevVideo()">❮</button>
+<button class="arrow left" onclick="prevVideo()">❮</button>
 
-  <video class="active" playsinline controls preload="auto">
-    <source src="intro.mp4" type="video/mp4">
-  </video>
+<video class="active" playsinline controls preload="auto">
+<source src="intro.mp4" type="video/mp4">
+</video>
 
-  <video playsinline controls preload="auto">
-    <source src="Cabinet.mp4" type="video/mp4">
-  </video>
+<video playsinline controls preload="auto">
+<source src="Cabinet.mp4" type="video/mp4">
+</video>
 
-  <video playsinline controls preload="auto">
-    <source src="EAG2.mp4" type="video/mp4">
-  </video>
-
-  <video playsinline controls preload="auto">
-    <source src="Admiral.mp4" type="video/mp4">
-  </video>
-
-  <button class="arrow right" onclick="nextVideo()">❯</button>
+<button class="arrow right" onclick="nextVideo()">❯</button>
 
 </div>
+
+<script>
+
+let current = 0;
+const videos = document.querySelectorAll(".carousel video");
+
+function showVideo(index){
+
+videos[current].pause();
+videos[current].currentTime = 0;
+videos[current].classList.remove("active");
+
+current = index;
+
+if(current >= videos.length) current = 0;
+if(current < 0) current = videos.length - 1;
+
+videos[current].classList.add("active");
+
+}
+
+function nextVideo(){
+showVideo(current + 1);
+}
+
+function prevVideo(){
+showVideo(current - 1);
+}
+
+/* Auto advance */
+
+videos.forEach((video,i)=>{
+
+video.addEventListener("ended",()=>{
+
+if(i === current){
+nextVideo();
+}
+
+});
+
+});
+
+</script>
+
+</body>
+</html>
