@@ -7,14 +7,32 @@
 <style>
 body {
   margin: 0;
-  background: url('NAH.png') center/cover no-repeat;
   font-family: Arial, sans-serif;
   color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: black;
+  transition: background 0.5s ease;
+}
+
+/* Background overlay (blurred NAH.png) */
+.background-blur {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('NAH.png') center/cover no-repeat;
+  filter: blur(20px);
+  z-index: -1;
+  transition: opacity 0.5s ease;
+  opacity: 1;
 }
 
 /* Top links */
 .links {
-  margin: 1rem 0;
+  margin: 1rem 0 0.5rem 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,30 +55,27 @@ body {
 
 /* Carousel container */
 .carousel-container {
-  position: relative;
   width: 100%;
-  height: 80vh;
   display: flex;
   justify-content: center;
-  align-items: center;
   overflow: hidden;
+  padding-bottom: 20px;
+  position: relative;
 }
 
 /* Carousel row */
 .carousel {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 20px;
   transition: all 0.5s ease;
   scroll-behavior: smooth;
-  padding: 0 20px;
 }
 
 .carousel video {
   flex: 0 0 auto;
-  width: 250px;  /* initial size */
-  max-height: 70vh;
+  width: 220px;
+  max-height: 60vh;
   border: 4px solid white;
   border-radius: 8px;
   object-fit: contain;
@@ -75,7 +90,7 @@ body {
 }
 
 .carousel.focused video.active {
-  width: 450px;       /* active video bigger */
+  width: 450px;
   max-height: 80vh;
   opacity: 1;
   border: 6px solid white;
@@ -95,7 +110,7 @@ body {
   cursor: pointer;
   border-radius: 6px;
   z-index: 10;
-  display: none; /* hidden initially */
+  display: none;
 }
 
 .carousel.focused + .arrow.left,
@@ -116,17 +131,19 @@ body {
 @media(max-width:900px){
   .carousel video {
     width: 140px;
-    max-height: 50vh;
+    max-height: 55vh;
   }
 
   .carousel.focused video.active {
     width: auto;
-    max-height: 90vh;
+    max-height: 90vh; /* full mobile height */
   }
 }
 </style>
 </head>
 <body>
+
+<div class="background-blur"></div>
 
 <!-- Top links -->
 <div class="links">
@@ -152,7 +169,6 @@ body {
     </video>
   </div>
 
-  <!-- Arrows -->
   <button class="arrow left" onclick="prevVideo()">❮</button>
   <button class="arrow right" onclick="nextVideo()">❯</button>
 </div>
@@ -161,30 +177,35 @@ body {
 let current = 0;
 const carousel = document.querySelector(".carousel");
 const videos = carousel.querySelectorAll("video");
+const bgBlur = document.querySelector(".background-blur");
 
-// Only one video can play at a time
+// Only one video plays at a time
 videos.forEach(v => {
   v.addEventListener("play", () => {
-    videos.forEach(other => { if(other !== v) { other.pause(); } });
+    videos.forEach(other => { if(other !== v) other.pause(); });
   });
 });
 
-// Click a video to enter focused mode
+// Click a video to focus
 videos.forEach((vid,i)=>{
-  vid.addEventListener("click", (e)=>{
-    if(!carousel.classList.contains("focused")) {
+  vid.addEventListener("click", ()=>{
+    if(!carousel.classList.contains("focused")){
       carousel.classList.add("focused");
       current = i;
       updateCarousel();
+      bgBlur.style.opacity = 0;       // hide blur
+      document.body.style.background = "black"; // black background
     }
   });
 });
 
 // Click outside active video to exit focused mode
 carousel.addEventListener("click", (e)=>{
-  if(carousel.classList.contains("focused") && !e.target.classList.contains("active")) {
+  if(carousel.classList.contains("focused") && !e.target.classList.contains("active")){
     carousel.classList.remove("focused");
     videos.forEach(v => v.classList.remove("active"));
+    bgBlur.style.opacity = 1;        // show blurred background
+    document.body.style.background = "black"; // fallback black behind blur
   }
 });
 
