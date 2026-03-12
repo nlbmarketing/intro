@@ -25,30 +25,25 @@ body {
   z-index: -1;
 }
 
+/* Name above hyperlinks */
+.name {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
 /* Hyperlinks centered */
 .links {
   display: flex;
   gap: 10px;
   justify-content: center;
-  width: 100%;
-  margin: 1rem 0;
-  z-index: 5;
-  position: relative;
+  margin-bottom: 1rem;
 }
 
 .links a { text-decoration: none; color: white; font-weight: bold; font-size: 1rem; }
 .links span { color: white; font-size: 1rem; }
-
-/* Name aligned left of first video */
-.name {
-  position: relative;
-  align-self: flex-start;
-  margin-left: calc(50% - 32.5vw); /* approximate left edge of first video */
-  margin-bottom: 0.5rem;
-  font-size: 1.5rem;
-  font-weight: bold;
-  z-index: 5;
-}
 
 /* Carousel container */
 .carousel-container {
@@ -115,7 +110,7 @@ body {
   .arrow { display: block !important; } /* always visible on mobile */
 }
 
-/* Images below carousel, very small thumbnails */
+/* Images below carousel, tiny thumbnails */
 .carousel-images {
   display: flex;
   gap: 5px;
@@ -123,20 +118,20 @@ body {
   margin-bottom: 2rem;
 }
 
-.carousel-images img { max-height: 30px; border-radius: 3px; }
+.carousel-images img { max-height: 20px; border-radius: 3px; }
 </style>
 </head>
 <body>
 
 <div class="background-blur"></div>
 
+<div class="name">Nathan Branagh</div>
+
 <div class="links">
   <a href="https://www.linkedin.com/in/nathanbranagh/" target="_blank">LinkedIn</a><span>|</span>
   <a href="https://drive.google.com/drive/folders/1x9_RzVzoP2SZ3xy2s5E-kBiOas8eTh6h" target="_blank">Portfolio</a><span>|</span>
   <a href="https://www.tiktok.com/@retrojthompson?_r=1&_t=ZN-935tpweVK10" target="_blank">TikTok</a>
 </div>
-
-<div class="name">Nathan Branagh</div>
 
 <div class="carousel-container">
   <div class="carousel">
