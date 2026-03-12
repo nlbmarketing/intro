@@ -7,11 +7,11 @@
 
 <style>
 
-html, body{
+html, body {
 margin:0;
 padding:0;
 height:100%;
-background:black;
+background-color:black;
 font-family:Arial,sans-serif;
 color:white;
 display:flex;
@@ -20,7 +20,7 @@ align-items:center;
 justify-content:flex-start;
 }
 
-.links{
+.links {
 margin:1rem 0 0.5rem 0;
 display:flex;
 justify-content:center;
@@ -28,78 +28,73 @@ align-items:center;
 gap:5px;
 }
 
-.links a{
+.links a {
 text-decoration:none;
 color:#00ffff;
 font-weight:bold;
 font-size:0.85rem;
 }
 
-.links span{
+.links span {
 color:white;
 font-size:0.85rem;
 }
 
 /* Carousel */
 
-.carousel{
+.carousel {
 position:relative;
 display:flex;
-align-items:center;
 justify-content:center;
+align-items:center;
 }
 
-/* Video styling */
+/* Videos */
 
-.carousel video{
+.carousel video {
 width:auto;
 height:90vh;
 max-width:95vw;
 border:2px solid #fff;
 border-radius:8px;
-background:black;
-position:absolute;
-opacity:0;
-transition:opacity 0.4s ease;
+display:none;
 }
 
-.carousel video.active{
-opacity:1;
-position:relative;
+.carousel video.active {
+display:block;
 }
 
 /* Arrows */
 
-.arrow{
+.arrow {
 position:absolute;
 top:50%;
 transform:translateY(-50%);
-background:rgba(0,0,0,0.7);
+background:rgba(0,0,0,0.6);
 border:none;
 color:white;
-font-size:40px;
-padding:12px 18px;
+font-size:32px;
+padding:10px 14px;
 cursor:pointer;
-border-radius:8px;
-z-index:5;
+border-radius:6px;
 }
 
-.arrow:hover{
-background:rgba(0,0,0,0.95);
+.arrow:hover {
+background:rgba(0,0,0,0.9);
 }
 
-.left{
-left:-70px;
+.left {
+left:-60px;
 }
 
-.right{
-right:-70px;
+.right {
+right:-60px;
 }
 
 @media(max-width:900px){
 
-.left{left:10px;}
-.right{right:10px;}
+.left {left:10px;}
+.right {right:10px;}
 
 }
 
@@ -148,10 +143,6 @@ if(current < 0) current = videos.length - 1;
 
 videos[current].classList.add("active");
 
-setTimeout(()=>{
-videos[current].play();
-},100);
-
 }
 
 function nextVideo(){
@@ -162,7 +153,7 @@ function prevVideo(){
 showVideo(current - 1);
 }
 
-/* When video ends → next video */
+/* Auto advance */
 
 videos.forEach((video,i)=>{
 
