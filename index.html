@@ -1,7 +1,9 @@
 <div class="carousel">
 
+  <!-- Left Arrow -->
   <button class="arrow left" onclick="prevVideo()">❮</button>
 
+  <!-- Video Wrappers -->
   <div class="video-wrapper active">
     <video playsinline controls preload="auto">
       <source src="intro.mp4" type="video/mp4">
@@ -26,6 +28,7 @@
     </video>
   </div>
 
+  <!-- Right Arrow -->
   <button class="arrow right" onclick="nextVideo()">❯</button>
 
 </div>
@@ -42,17 +45,17 @@
   overflow: hidden;
 }
 
+/* Each video is wrapped */
 .video-wrapper {
   display: none; /* hide all by default */
   width: 100%;
   height: 100%;
-  display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .video-wrapper.active {
-  display: flex; /* show active video */
+  display: flex; /* show only active video */
 }
 
 .video-wrapper video {
@@ -63,6 +66,33 @@
   border-radius: 8px;
   background-color: black;
 }
+
+/* Arrows */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.6);
+  border: none;
+  color: white;
+  font-size: 32px;
+  padding: 10px 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  z-index: 10; /* ensures arrows are above videos */
+}
+
+.arrow:hover {
+  background: rgba(0,0,0,0.9);
+}
+
+.left { left: -60px; }
+.right { right: -60px; }
+
+@media(max-width:900px){
+  .left { left: 10px; }
+  .right { right: 10px; }
+}
 </style>
 
 <script>
@@ -71,8 +101,9 @@ const wrappers = document.querySelectorAll(".video-wrapper");
 
 function showVideo(index){
   wrappers[current].classList.remove("active");
-  wrappers[current].querySelector("video").pause();
-  wrappers[current].querySelector("video").currentTime = 0;
+  const vid = wrappers[current].querySelector("video");
+  vid.pause();
+  vid.currentTime = 0;
 
   current = index;
   if(current >= wrappers.length) current = 0;
@@ -84,10 +115,10 @@ function showVideo(index){
 function nextVideo(){ showVideo(current + 1); }
 function prevVideo(){ showVideo(current - 1); }
 
-/* Auto advance */
+/* Auto-advance on video end */
 wrappers.forEach((wrapper,i)=>{
   const vid = wrapper.querySelector("video");
-  vid.addEventListener("ended",()=>{
+  vid.addEventListener("ended", ()=>{
     if(i === current) nextVideo();
   });
 });
