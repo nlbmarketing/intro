@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nathan Branagh</title>
-<style>
+/* Body reset */
 body {
   margin: 0;
+  padding: 0;
+  overflow: hidden;          /* prevents scrollbars from appearing */
   font-family: Arial, sans-serif;
   color: white;
   display: flex;
@@ -15,190 +11,19 @@ body {
   min-height: 100vh;
 }
 
-/* Background as it was previously working */
+/* Blurred background only */
 .background-blur {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   background: url('NAH.png') center/cover no-repeat;
   filter: blur(25px);
   z-index: -1;
 }
 
-/* Name above hyperlinks */
-.name {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
-  text-align: center;
-}
-
-/* Hyperlinks centered below name */
-.links {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-bottom: 2rem;
-}
-
-.links a { text-decoration: none; color: white; font-weight: bold; font-size: 1rem; }
-.links span { color: white; font-size: 1rem; }
-
-/* Carousel container */
-.carousel-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  overflow: hidden;
-  padding: 20px 0;
-  position: relative;
-}
-
-/* Carousel row */
-.carousel {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  scroll-behavior: smooth;
-  justify-content: center;
-}
-
+/* Ensure videos don’t add any extra background */
 .carousel video {
-  flex: 0 0 auto;
-  height: 65vh;
-  border-radius: 8px;
-  object-fit: contain;
-  cursor: pointer;
-  transition: all 0.5s ease;
-  background: black;
-  preload: auto;
-  playsinline: true;
+  background: transparent;  /* remove black */
 }
-
-/* Focused state */
-.carousel.focused video { opacity: 0.6; }
-.carousel.focused video.active { max-height: 85vh; opacity: 1; z-index: 2; }
-
-/* Arrows */
-.arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.5);
-  border: none;
-  color: white;
-  font-size: 36px;
-  padding: 12px 16px;
-  cursor: pointer;
-  border-radius: 6px;
-  z-index: 10;
-  display: none;
-}
-
-.arrow.left { left: 10px; }
-.arrow.right { right: 10px; }
-.arrow:hover { background: rgba(0,0,0,0.7); }
-
-/* Desktop hover arrows */
-@media(min-width:901px){
-  .carousel-container:hover .arrow { display: block; }
-}
-
-/* Mobile responsiveness */
-@media(max-width:900px){
-  .carousel-container { overflow-x: auto; padding: 10px 0; }
-  .carousel { gap: 15px; justify-content: flex-start; }
-  .carousel video { max-height: 80vh; flex: 0 0 auto; }
-  .arrow { display: block !important; }
-}
-</style>
-</head>
-<body>
-
-<div class="background-blur"></div>
-
-<div class="name">Nathan Branagh</div>
-
-<div class="links">
-  <a href="https://www.linkedin.com/in/nathanbranagh/" target="_blank">LinkedIn</a><span>|</span>
-  <a href="https://drive.google.com/drive/folders/1x9_RzVzoP2SZ3xy2s5E-kBiOas8eTh6h" target="_blank">Portfolio</a><span>|</span>
-  <a href="https://www.tiktok.com/@retrojthompson?_r=1&_t=ZN-935tpweVK10" target="_blank">TikTok</a>
-</div>
-
-<div class="carousel-container">
-  <div class="carousel">
-    <video playsinline controls preload="auto" poster="intro.jpg">
-      <source src="intro.mp4" type="video/mp4">
-    </video>
-    <video playsinline controls preload="auto" poster="Cabinet.jpg">
-      <source src="Cabinet.mp4" type="video/mp4">
-    </video>
-    <video playsinline controls preload="auto" poster="Admiral.jpg">
-      <source src="Admiral.mp4" type="video/mp4">
-    </video>
-    <video playsinline controls preload="auto" poster="EAG2.jpg">
-      <source src="EAG2.mp4" type="video/mp4">
-    </video>
-    <video playsinline controls preload="auto" poster="SR2.jpg">
-      <source src="SR2.mp4" type="video/mp4">
-    </video>
-  </div>
-
-  <button class="arrow left" onclick="prevVideo()">❮</button>
-  <button class="arrow right" onclick="nextVideo()">❯</button>
-</div>
-
-<script>
-let current = 0;
-const carousel = document.querySelector(".carousel");
-const videos = carousel.querySelectorAll("video");
-
-function pauseAllExcept(active){ videos.forEach(v=>{ if(v!==active) v.pause(); }); }
-
-videos.forEach((vid,i)=>{
-  vid.addEventListener("click", ()=>{
-    pauseAllExcept(vid);
-    if(!carousel.classList.contains("focused")){
-      carousel.classList.add("focused");
-      current=i;
-      updateCarousel();
-    }
-  });
-  vid.addEventListener("play", ()=> pauseAllExcept(vid));
-});
-
-function exitFocusedMode(){
-  carousel.classList.remove("focused");
-  videos.forEach(v=>v.classList.remove("active"));
-}
-
-carousel.addEventListener("click", e=>{
-  if(carousel.classList.contains("focused") && !e.target.classList.contains("active")) exitFocusedMode();
-});
-
-document.addEventListener("keydown", e=>{
-  if(e.key==="Escape" && carousel.classList.contains("focused")) exitFocusedMode();
-});
-
-function updateCarousel(){
-  videos.forEach((v,i)=>{ v.classList.remove("active"); if(i===current) v.classList.add("active"); });
-  if(window.innerWidth>900){
-    const activeVideo = videos[current];
-    const carouselRect = carousel.getBoundingClientRect();
-    const videoRect = activeVideo.getBoundingClientRect();
-    const offset = videoRect.left - carouselRect.left - (carouselRect.width/2) + (videoRect.width/2);
-    carousel.scrollBy({ left: offset, behavior:'smooth' });
-  }
-}
-
-function nextVideo(){ videos[current].pause(); current=(current+1)%videos.length; updateCarousel(); }
-function prevVideo(){ videos[current].pause(); current=(current-1+videos.length)%videos.length; updateCarousel(); }
-
-if(window.innerWidth<=900){ videos[0].scrollIntoView({behavior:'auto', inline:'center'}); }
-</script>
-
-</body>
-</html>
