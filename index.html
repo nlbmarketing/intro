@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nathan Branagh</title>
 <style>
+/* === Body & Background === */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -30,7 +31,7 @@ body {
   opacity: 1;
 }
 
-/* Top links */
+/* === Top Links === */
 .links {
   margin: 1rem 0 0.5rem 0;
   display: flex;
@@ -53,7 +54,7 @@ body {
   font-size: 1rem;
 }
 
-/* Carousel container */
+/* === Carousel Container === */
 .carousel-container {
   width: 100%;
   display: flex;
@@ -63,7 +64,7 @@ body {
   position: relative;
 }
 
-/* Carousel row */
+/* === Carousel Row === */
 .carousel {
   display: flex;
   align-items: center;
@@ -74,9 +75,9 @@ body {
 
 .carousel video {
   flex: 0 0 auto;
-  width: 280px;       /* larger default */
+  width: 280px;       /* desktop default size */
   max-height: 65vh;
-  border: 4px solid white; /* only in initial view */
+  border: 4px solid white; 
   border-radius: 8px;
   object-fit: contain;
   background-color: transparent;
@@ -84,10 +85,10 @@ body {
   cursor: pointer;
 }
 
-/* Focused state: remove border */
+/* === Focused State === */
 .carousel.focused video {
   opacity: 0.6;
-  border: none;
+  border: none;       /* remove border in focused mode */
 }
 
 .carousel.focused video.active {
@@ -97,7 +98,7 @@ body {
   z-index: 2;
 }
 
-/* Arrows */
+/* === Arrows === */
 .arrow {
   position: absolute;
   top: 50%;
@@ -110,14 +111,7 @@ body {
   cursor: pointer;
   border-radius: 6px;
   z-index: 10;
-  display: none;
-}
-
-.carousel.focused + .arrow.left,
-.carousel.focused + .arrow.right,
-.carousel-container .arrow.left,
-.carousel-container .arrow.right {
-  display: block;
+  display: none;  /* hidden initially */
 }
 
 .arrow.left { left: 10px; }
@@ -127,16 +121,32 @@ body {
   background: rgba(0,0,0,0.7);
 }
 
-/* Mobile responsiveness */
+/* === Mobile Responsive === */
 @media(max-width:900px){
-  .carousel video {
-    width: 160px;
-    max-height: 55vh;
+  body {
+    align-items: stretch;
   }
-
-  .carousel.focused video.active {
+  .carousel-container {
+    overflow-x: auto;
+    padding: 10px 0;
+  }
+  .carousel {
+    gap: 15px;
+  }
+  .carousel video {
     width: auto;
+    max-height: 80vh;
+    flex: 0 0 auto;
+    border: 4px solid white; 
+  }
+  .carousel.focused video.active {
     max-height: 90vh;
+    width: auto;
+    border: none; /* remove border for focused */
+  }
+  /* Arrows hidden on mobile — user can swipe */
+  .arrow {
+    display: none !important;
   }
 }
 </style>
@@ -169,6 +179,7 @@ body {
     </video>
   </div>
 
+  <!-- Arrows (desktop only) -->
   <button class="arrow left" onclick="prevVideo()">❮</button>
   <button class="arrow right" onclick="nextVideo()">❯</button>
 </div>
@@ -178,6 +189,8 @@ let current = 0;
 const carousel = document.querySelector(".carousel");
 const videos = carousel.querySelectorAll("video");
 const bgBlur = document.querySelector(".background-blur");
+const leftArrow = document.querySelector(".arrow.left");
+const rightArrow = document.querySelector(".arrow.right");
 
 // Only one video plays at a time
 videos.forEach(v => {
@@ -193,8 +206,12 @@ videos.forEach((vid,i)=>{
       carousel.classList.add("focused");
       current = i;
       updateCarousel();
-      bgBlur.style.opacity = 0;           // hide blur
-      document.body.style.background = "black"; // black background in focused mode
+      // Show arrows
+      leftArrow.style.display = "block";
+      rightArrow.style.display = "block";
+      // Background black
+      bgBlur.style.opacity = 0;
+      document.body.style.background = "black";
     }
   });
 });
@@ -204,8 +221,12 @@ carousel.addEventListener("click", (e)=>{
   if(carousel.classList.contains("focused") && !e.target.classList.contains("active")){
     carousel.classList.remove("focused");
     videos.forEach(v => v.classList.remove("active"));
-    bgBlur.style.opacity = 1;           // restore blurred background
-    document.body.style.background = "black"; // fallback black
+    // Hide arrows
+    leftArrow.style.display = "none";
+    rightArrow.style.display = "none";
+    // Restore blurred background
+    bgBlur.style.opacity = 1;
+    document.body.style.background = "black";
   }
 });
 
@@ -215,12 +236,14 @@ function updateCarousel(){
     if(i===current) v.classList.add("active");
   });
 
-  // Center active video
-  const activeVideo = videos[current];
-  const carouselRect = carousel.getBoundingClientRect();
-  const videoRect = activeVideo.getBoundingClientRect();
-  const offset = videoRect.left - carouselRect.left - (carouselRect.width/2) + (videoRect.width/2);
-  carousel.scrollBy({ left: offset, behavior: 'smooth' });
+  // Center active video (desktop only)
+  if(window.innerWidth > 900){
+    const activeVideo = videos[current];
+    const carouselRect = carousel.getBoundingClientRect();
+    const videoRect = activeVideo.getBoundingClientRect();
+    const offset = videoRect.left - carouselRect.left - (carouselRect.width/2) + (videoRect.width/2);
+    carousel.scrollBy({ left: offset, behavior: 'smooth' });
+  }
 }
 
 function nextVideo(){
