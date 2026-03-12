@@ -5,11 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nathan Branagh</title>
 <style>
-body {
+html, body {
   margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   font-family: Arial, sans-serif;
   color: white;
-  background: black;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -21,6 +24,7 @@ body {
   top: 0; left: 0;
   width: 100%; height: 100%;
   background: url('NAH.png') center/cover no-repeat;
+  background-attachment: fixed;
   filter: blur(25px);
   z-index: -1;
 }
@@ -30,6 +34,7 @@ body {
   font-size: 2rem;
   font-weight: bold;
   margin-top: 1.5rem;
+  margin-bottom: 3rem; /* increased space to hyperlinks */
   text-align: center;
 }
 
@@ -60,18 +65,19 @@ body {
   align-items: center;
   gap: 30px;
   scroll-behavior: smooth;
-  justify-content: center; /* center the videos fully */
+  justify-content: center;
 }
 
 .carousel video {
   flex: 0 0 auto;
   height: 65vh;
-  border: none;
   border-radius: 8px;
   object-fit: contain;
   cursor: pointer;
   transition: all 0.5s ease;
-  background: black; /* fallback for poster */
+  background: transparent; /* ensures poster is visible */
+  preload: auto;           /* preload frames */
+  playsinline: true;
 }
 
 /* Focused state */
@@ -108,7 +114,7 @@ body {
   .carousel-container { overflow-x: auto; padding: 10px 0; }
   .carousel { gap: 15px; justify-content: flex-start; }
   .carousel video { max-height: 80vh; flex: 0 0 auto; }
-  .arrow { display: block !important; } /* always visible on mobile */
+  .arrow { display: block !important; }
 }
 </style>
 </head>
@@ -126,19 +132,19 @@ body {
 
 <div class="carousel-container">
   <div class="carousel">
-    <video playsinline controls preload="metadata" poster="intro.jpg">
+    <video playsinline controls preload="auto" poster="intro.jpg">
       <source src="intro.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="metadata" poster="Cabinet.jpg">
+    <video playsinline controls preload="auto" poster="Cabinet.jpg">
       <source src="Cabinet.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="metadata" poster="Admiral.jpg">
+    <video playsinline controls preload="auto" poster="Admiral.jpg">
       <source src="Admiral.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="metadata" poster="EAG2.jpg">
+    <video playsinline controls preload="auto" poster="EAG2.jpg">
       <source src="EAG2.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="metadata" poster="SR2.jpg">
+    <video playsinline controls preload="auto" poster="SR2.jpg">
       <source src="SR2.mp4" type="video/mp4">
     </video>
   </div>
