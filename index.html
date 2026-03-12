@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nathan Branagh</title>
 <style>
-/* === Body & Background === */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -31,9 +30,9 @@ body {
   opacity: 1;
 }
 
-/* === Top Links === */
+/* Top links */
 .links {
-  margin: 1rem 0 0.5rem 0;
+  margin: 2rem 0 1rem 0;  /* slightly more gap from top */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -44,17 +43,17 @@ body {
 
 .links a {
   text-decoration: none;
-  color: #00ffff;
+  color: #8B0000; /* dark red */
   font-weight: bold;
   font-size: 1rem;
 }
 
 .links span {
-  color: white;
+  color: #8B0000;
   font-size: 1rem;
 }
 
-/* === Carousel Container === */
+/* Carousel container */
 .carousel-container {
   width: 100%;
   display: flex;
@@ -64,20 +63,20 @@ body {
   position: relative;
 }
 
-/* === Carousel Row === */
+/* Carousel row */
 .carousel {
   display: flex;
   align-items: center;
-  gap: 25px;
+  gap: 30px; /* slightly wider gap */
   transition: all 0.5s ease;
   scroll-behavior: smooth;
 }
 
 .carousel video {
   flex: 0 0 auto;
-  width: 280px;       /* desktop default size */
+  width: 280px;
   max-height: 65vh;
-  border: 4px solid white; 
+  border: 1px solid rgba(0,0,0,0.3); /* faint black border */
   border-radius: 8px;
   object-fit: contain;
   background-color: transparent;
@@ -85,10 +84,10 @@ body {
   cursor: pointer;
 }
 
-/* === Focused State === */
+/* Focused state */
 .carousel.focused video {
   opacity: 0.6;
-  border: none;       /* remove border in focused mode */
+  border: none;
 }
 
 .carousel.focused video.active {
@@ -98,7 +97,7 @@ body {
   z-index: 2;
 }
 
-/* === Arrows === */
+/* Arrows */
 .arrow {
   position: absolute;
   top: 50%;
@@ -111,7 +110,7 @@ body {
   cursor: pointer;
   border-radius: 6px;
   z-index: 10;
-  display: none;  /* hidden initially */
+  display: none;  /* only show on focused desktop */
 }
 
 .arrow.left { left: 10px; }
@@ -121,7 +120,7 @@ body {
   background: rgba(0,0,0,0.7);
 }
 
-/* === Mobile Responsive === */
+/* Mobile responsive */
 @media(max-width:900px){
   body {
     align-items: stretch;
@@ -137,14 +136,14 @@ body {
     width: auto;
     max-height: 80vh;
     flex: 0 0 auto;
-    border: 4px solid white; 
+    border: 1px solid rgba(0,0,0,0.3); /* faint black border */
   }
   .carousel.focused video.active {
     max-height: 90vh;
     width: auto;
-    border: none; /* remove border for focused */
+    border: none;
   }
-  /* Arrows hidden on mobile — user can swipe */
+  /* Arrows hidden on mobile */
   .arrow {
     display: none !important;
   }
@@ -165,21 +164,21 @@ body {
 <!-- Carousel -->
 <div class="carousel-container">
   <div class="carousel">
-    <video playsinline controls preload="auto">
+    <video poster="intro.jpg" playsinline controls preload="auto">
       <source src="intro.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="auto">
+    <video poster="Cabinet.jpg" playsinline controls preload="auto">
       <source src="Cabinet.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="auto">
+    <video poster="Admiral.jpg" playsinline controls preload="auto">
       <source src="Admiral.mp4" type="video/mp4">
     </video>
-    <video playsinline controls preload="auto">
+    <video poster="EAG2.jpg" playsinline controls preload="auto">
       <source src="EAG2.mp4" type="video/mp4">
     </video>
   </div>
 
-  <!-- Arrows (desktop only) -->
+  <!-- Arrows -->
   <button class="arrow left" onclick="prevVideo()">❮</button>
   <button class="arrow right" onclick="nextVideo()">❯</button>
 </div>
@@ -192,28 +191,34 @@ const bgBlur = document.querySelector(".background-blur");
 const leftArrow = document.querySelector(".arrow.left");
 const rightArrow = document.querySelector(".arrow.right");
 
-// Only one video plays at a time
-videos.forEach(v => {
-  v.addEventListener("play", () => {
-    videos.forEach(other => { if(other !== v) other.pause(); });
+// Ensure only one video ever plays
+function pauseAllExcept(active) {
+  videos.forEach(v => {
+    if(v !== active) v.pause();
   });
-});
+}
 
 // Click video to focus
 videos.forEach((vid,i)=>{
   vid.addEventListener("click", ()=>{
+    pauseAllExcept(vid); // stop others
     if(!carousel.classList.contains("focused")){
       carousel.classList.add("focused");
       current = i;
       updateCarousel();
-      // Show arrows
-      leftArrow.style.display = "block";
-      rightArrow.style.display = "block";
+      // Show arrows on desktop
+      if(window.innerWidth > 900){
+        leftArrow.style.display = "block";
+        rightArrow.style.display = "block";
+      }
       // Background black
       bgBlur.style.opacity = 0;
       document.body.style.background = "black";
     }
   });
+
+  // Pause others when any video starts playing
+  vid.addEventListener("play", ()=> pauseAllExcept(vid));
 });
 
 // Click outside active video to exit focused mode
@@ -221,10 +226,8 @@ carousel.addEventListener("click", (e)=>{
   if(carousel.classList.contains("focused") && !e.target.classList.contains("active")){
     carousel.classList.remove("focused");
     videos.forEach(v => v.classList.remove("active"));
-    // Hide arrows
     leftArrow.style.display = "none";
     rightArrow.style.display = "none";
-    // Restore blurred background
     bgBlur.style.opacity = 1;
     document.body.style.background = "black";
   }
@@ -236,7 +239,7 @@ function updateCarousel(){
     if(i===current) v.classList.add("active");
   });
 
-  // Center active video (desktop only)
+  // Desktop: center active video
   if(window.innerWidth > 900){
     const activeVideo = videos[current];
     const carouselRect = carousel.getBoundingClientRect();
@@ -247,13 +250,21 @@ function updateCarousel(){
 }
 
 function nextVideo(){
+  videos[current].pause(); // stop previous
   current = (current + 1) % videos.length;
   updateCarousel();
 }
 
 function prevVideo(){
+  videos[current].pause(); // stop previous
   current = (current -1 + videos.length) % videos.length;
   updateCarousel();
+}
+
+// On mobile load: scroll first video into view
+if(window.innerWidth <= 900){
+  const firstVideo = videos[0];
+  firstVideo.scrollIntoView({behavior:'auto', inline:'center'});
 }
 </script>
 </body>
