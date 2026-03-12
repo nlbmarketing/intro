@@ -9,31 +9,20 @@ body {
   margin: 0;
   font-family: Arial, sans-serif;
   color: white;
+  background: black;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: black;
 }
 
 /* Blurred background */
 .background-blur {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: url('NAH.png') center/cover no-repeat;
   filter: blur(25px);
   z-index: -1;
-}
-
-/* Name above carousel */
-.name {
-  align-self: flex-start;
-  margin-left: 2rem;
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-top: 1.5rem;
 }
 
 /* Hyperlinks centered */
@@ -42,11 +31,24 @@ body {
   gap: 10px;
   justify-content: center;
   width: 100%;
-  margin: 0.5rem 0 1rem 0;
+  margin: 1rem 0;
+  z-index: 5;
+  position: relative;
 }
 
 .links a { text-decoration: none; color: white; font-weight: bold; font-size: 1rem; }
 .links span { color: white; font-size: 1rem; }
+
+/* Name aligned left of first video */
+.name {
+  position: relative;
+  align-self: flex-start;
+  margin-left: calc(50% - 32.5vw); /* approximate left edge of first video */
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  z-index: 5;
+}
 
 /* Carousel container */
 .carousel-container {
@@ -113,28 +115,28 @@ body {
   .arrow { display: block !important; } /* always visible on mobile */
 }
 
-/* Images below carousel, smaller thumbnails */
+/* Images below carousel, very small thumbnails */
 .carousel-images {
   display: flex;
-  gap: 10px;
+  gap: 5px;
   justify-content: center;
   margin-bottom: 2rem;
 }
 
-.carousel-images img { max-height: 60px; border-radius: 5px; }
+.carousel-images img { max-height: 30px; border-radius: 3px; }
 </style>
 </head>
 <body>
 
 <div class="background-blur"></div>
 
-<div class="name">Nathan Branagh</div>
-
 <div class="links">
   <a href="https://www.linkedin.com/in/nathanbranagh/" target="_blank">LinkedIn</a><span>|</span>
   <a href="https://drive.google.com/drive/folders/1x9_RzVzoP2SZ3xy2s5E-kBiOas8eTh6h" target="_blank">Portfolio</a><span>|</span>
   <a href="https://www.tiktok.com/@retrojthompson?_r=1&_t=ZN-935tpweVK10" target="_blank">TikTok</a>
 </div>
+
+<div class="name">Nathan Branagh</div>
 
 <div class="carousel-container">
   <div class="carousel">
@@ -216,5 +218,6 @@ function prevVideo(){ videos[current].pause(); current=(current-1+videos.length)
 // Mobile: center first video
 if(window.innerWidth<=900){ videos[0].scrollIntoView({behavior:'auto', inline:'center'}); }
 </script>
+
 </body>
 </html>
