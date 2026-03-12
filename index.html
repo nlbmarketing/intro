@@ -109,7 +109,7 @@ body {
   cursor: pointer;
   border-radius: 6px;
   z-index: 10;
-  display: none;  /* only show on focused desktop */
+  display: none;
 }
 
 .arrow.left { left: 10px; }
@@ -136,17 +136,14 @@ body {
     max-height: 80vh;
     flex: 0 0 auto;
     border: none;
-    /* Mobile optimized load: autoplay muted */
-    autoplay: true;
-    muted: true;
     preload: auto;
+    playsinline: true;
   }
   .carousel.focused video.active {
     max-height: 90vh;
     width: auto;
     border: none;
   }
-  /* Arrows hidden on mobile */
   .arrow {
     display: none !important;
   }
@@ -157,31 +154,27 @@ body {
 
 <div class="background-blur"></div>
 
-<!-- Top links -->
 <div class="links">
   <a href="https://www.linkedin.com/in/nathanbranagh/" target="_blank">LinkedIn</a><span>|</span>
   <a href="https://drive.google.com/drive/folders/1x9_RzVzoP2SZ3xy2s5E-kBiOas8eTh6h" target="_blank">Portfolio</a><span>|</span>
   <a href="https://www.tiktok.com/@retrojthompson?_r=1&_t=ZN-935tpweVK10" target="_blank">TikTok</a>
 </div>
 
-<!-- Carousel -->
 <div class="carousel-container">
   <div class="carousel">
-    <video playsinline muted autoplay preload="auto">
+    <video playsinline controls preload="auto">
       <source src="intro.mp4" type="video/mp4">
     </video>
-    <video playsinline muted autoplay preload="auto">
+    <video playsinline controls preload="auto">
       <source src="Cabinet.mp4" type="video/mp4">
     </video>
-    <video playsinline muted autoplay preload="auto">
+    <video playsinline controls preload="auto">
       <source src="Admiral.mp4" type="video/mp4">
     </video>
-    <video playsinline muted autoplay preload="auto">
+    <video playsinline controls preload="auto">
       <source src="EAG2.mp4" type="video/mp4">
     </video>
   </div>
-
-  <!-- Arrows -->
   <button class="arrow left" onclick="prevVideo()">❮</button>
   <button class="arrow right" onclick="nextVideo()">❯</button>
 </div>
@@ -190,18 +183,17 @@ body {
 let current = 0;
 const carousel = document.querySelector(".carousel");
 const videos = carousel.querySelectorAll("video");
-const bgBlur = document.querySelector(".background-blur");
 const leftArrow = document.querySelector(".arrow.left");
 const rightArrow = document.querySelector(".arrow.right");
 
-// Ensure only one video plays at a time
+// Only one video plays at a time
 function pauseAllExcept(active) {
   videos.forEach(v => {
     if(v !== active) v.pause();
   });
 }
 
-// Click video to focus
+// Click to focus (PC: enlarge only, no black overlay)
 videos.forEach((vid,i)=>{
   vid.addEventListener("click", ()=>{
     pauseAllExcept(vid);
@@ -213,25 +205,20 @@ videos.forEach((vid,i)=>{
         leftArrow.style.display = "block";
         rightArrow.style.display = "block";
       }
-      bgBlur.style.opacity = 0;
-      document.body.style.background = "black";
     }
   });
 
   vid.addEventListener("play", ()=> pauseAllExcept(vid));
 });
 
-// Exit focused mode
+// Exit focused mode: click outside or ESC
 function exitFocusedMode(){
   carousel.classList.remove("focused");
   videos.forEach(v => v.classList.remove("active"));
   leftArrow.style.display = "none";
   rightArrow.style.display = "none";
-  bgBlur.style.opacity = 1;
-  document.body.style.background = "black";
 }
 
-// Click outside or ESC
 carousel.addEventListener("click", e=>{
   if(carousel.classList.contains("focused") && !e.target.classList.contains("active")){
     exitFocusedMode();
