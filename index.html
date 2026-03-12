@@ -1,3 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nathan Branagh</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  color:white;
+  background:black;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* Blurred background */
+.background-blur{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:url('NAH.png') center/cover no-repeat;
+  filter:blur(25px);
+  z-index:-1;
+}
+
+/* Name */
+.name{
+  font-size:2rem;
+  font-weight:bold;
+  margin-top:1rem;
+  margin-bottom:2rem;
+  text-align:center;
+}
+
+/* Links */
+.links{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  margin-bottom:2rem;
+}
+
+.links a{
+  text-decoration:none;
+  color:white;
+  font-weight:bold;
+  font-size:1rem;
+}
+
+.links span{
+  color:white;
+  font-size:1rem;
+}
+
+/* Carousel */
+.carousel-container{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  overflow:hidden;
+  padding:20px 0;
+  position:relative;
+}
+
+.carousel{
+  display:flex;
+  align-items:center;
+  gap:30px;
+  scroll-behavior:smooth;
+  justify-content:center;
+  scroll-snap-type:x mandatory;
+}
+
+.carousel video{
+  flex:0 0 auto;
+  height:65vh;
+  border:none;
+  border-radius:8px;
+  object-fit:contain;
+  cursor:pointer;
+  transition:all .5s ease;
+  background:black;
+  scroll-snap-align:center;
+}
+
+/* Focused */
+.carousel.focused video{
+  opacity:.6;
+}
+
+.carousel.focused video.active{
+  max-height:85vh;
+  opacity:1;
+  z-index:2;
+}
+
+/* Arrows */
+.arrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  background:rgba(0,0,0,.5);
+  border:none;
+  color:white;
+  font-size:36px;
+  padding:12px 16px;
+  cursor:pointer;
+  border-radius:6px;
+  z-index:10;
+  display:none;
+}
+
+.arrow.left{left:10px;}
+.arrow.right{right:10px;}
+
+.arrow:hover{
+  background:rgba(0,0,0,.7);
+}
+
+/* Desktop */
+@media(min-width:901px){
+  .carousel-container:hover .arrow{
+    display:block;
+  }
+}
+
+/* Mobile */
+@media(max-width:900px){
+  .carousel-container{
+    overflow-x:auto;
+    padding:10px 0;
+  }
+  .carousel{
+    gap:15px;
+    justify-content:flex-start;
+  }
+  .carousel video{
+    max-height:80vh;
+    flex:0 0 auto;
+  }
+  .arrow{
+    display:block!important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="background-blur"></div>
+
+<div class="name">Nathan Branagh</div>
+
+<div class="links">
+  <a href="https://www.linkedin.com/in/nathanbranagh/" target="_blank">LinkedIn</a>
+  <span>|</span>
+  <a href="https://drive.google.com/drive/folders/1x9_RzVzoP2SZ3xy2s5E-kBiOas8eTh6h" target="_blank">Portfolio</a>
+  <span>|</span>
+  <a href="https://www.tiktok.com/@retrojthompson?_r=1&_t=ZN-935tpweVK10" target="_blank">TikTok</a>
+</div>
+
+<div class="carousel-container">
+  <div class="carousel">
+
+    <video playsinline controls preload="auto" poster="intro.jpg" muted>
+      <source src="intro.mp4" type="video/mp4">
+    </video>
+
+    <video playsinline controls preload="auto" poster="Cabinet.jpg" muted>
+      <source src="Cabinet.mp4" type="video/mp4">
+    </video>
+
+    <video playsinline controls preload="auto" poster="Admiral.jpg" muted>
+      <source src="Admiral.mp4" type="video/mp4">
+    </video>
+
+    <video playsinline controls preload="auto" poster="EAG2.jpg" muted>
+      <source src="EAG2.mp4" type="video/mp4">
+    </video>
+
+    <video playsinline controls preload="auto" poster="SR2.jpg" muted>
+      <source src="SR2.mp4" type="video/mp4">
+    </video>
+
+  </div>
+
+  <button class="arrow left" onclick="prevVideo()">❮</button>
+  <button class="arrow right" onclick="nextVideo()">❯</button>
+</div>
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
 
@@ -9,26 +204,22 @@ document.addEventListener("DOMContentLoaded", function() {
   /* Unlock audio after first click */
   document.addEventListener("click", () => { audioUnlocked = true; }, { once: true });
 
-  /* Set initial frame: Cabinet.mp4 at 0.5s, others at 0s */
+  /* Set initial frame safely */
   videos.forEach(video => {
-    video.addEventListener("loadeddata", () => {
-      if (video.readyState >= 2) {
-        if (video.querySelector("source").src.includes("Cabinet.mp4")) {
-          video.currentTime = 0.5;
-        } else {
-          video.currentTime = 0;
-        }
+    video.addEventListener("loadedmetadata", () => {
+      try {
+        const src = video.querySelector("source").getAttribute("src");
+        video.currentTime = src.endsWith("Cabinet.mp4") ? 0.5 : 0;
+      } catch(e) {
+        console.warn("Could not set currentTime:", e);
       }
     });
   });
 
   function pauseAllExcept(active) {
-    videos.forEach(v => {
-      if (v !== active) v.pause();
-    });
+    videos.forEach(v => { if (v !== active) v.pause(); });
   }
 
-  /* Video interactions */
   videos.forEach((vid, i) => {
 
     vid.addEventListener("click", () => {
@@ -41,12 +232,14 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     });
 
-    /* Hover preview (desktop only) */
     vid.addEventListener("mouseenter", () => {
       if (window.innerWidth > 900) {
         pauseAllExcept(vid);
         if (audioUnlocked) vid.muted = false;
-        vid.currentTime = vid.querySelector("source").src.includes("Cabinet.mp4") ? 0.5 : 0;
+        try {
+          const src = vid.querySelector("source").getAttribute("src");
+          vid.currentTime = src.endsWith("Cabinet.mp4") ? 0.5 : 0;
+        } catch(e){}
         vid.play();
       }
     });
@@ -54,14 +247,16 @@ document.addEventListener("DOMContentLoaded", function() {
     vid.addEventListener("mouseleave", () => {
       if (window.innerWidth > 900) {
         vid.pause();
-        vid.currentTime = vid.querySelector("source").src.includes("Cabinet.mp4") ? 0.5 : 0;
+        try {
+          const src = vid.querySelector("source").getAttribute("src");
+          vid.currentTime = src.endsWith("Cabinet.mp4") ? 0.5 : 0;
+        } catch(e){}
       }
     });
 
     vid.addEventListener("play", () => pauseAllExcept(vid));
   });
 
-  /* Exit focus mode */
   function exitFocusedMode() {
     carousel.classList.remove("focused");
     videos.forEach(v => v.classList.remove("active"));
@@ -115,3 +310,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 });
 </script>
+
+</body>
+</html>
